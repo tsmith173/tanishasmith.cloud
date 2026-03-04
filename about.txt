@@ -1,0 +1,73 @@
+Tanisha Smith | Cloud Architect & Engineer Portfolio
+
+A premium, interactive three-page portfolio built with HTML5, Tailwind CSS, and Vanilla JavaScript. This project represents a collaborative effort between a Cloud Engineer and AI to transform a professional legacy into a high-performance web experience.
+
+Domain: tanishasmith.cloud
+
+🚀 Hosting Instructions (GitHub Pages)
+
+To host this portfolio on your custom domain using GitHub:
+
+Create a Repository: Create a new public repository on GitHub named portfolio.
+
+Upload Files: Upload index.html, README.md, and your image file TanishaPic.jpg to the root directory.
+
+Enable Pages: Go to Settings > Pages. Set the source to "Deploy from a branch" and the branch to main.
+
+Custom Domain: Enter tanishasmith.cloud in the Custom Domain field. Configure your AWS Route 53 settings with GitHub's IP addresses (A records) and a CNAME record for the www subdomain.
+
+🧠 AI Prompt Engineering & Iterative Development Log
+
+This portfolio is the result of deliberate AI Prompt Engineering, where the developer (Tanisha Smith) acted as the Lead Architect, using iterative prompting to refine logic, ensure technical precision, and scale the UI/UX.
+
+🔄 Evolution Sprints
+
+Sprint 1: The Blueprint (Resume Transformation)
+
+Goal: Convert a standard text resume into a responsive HTML5 framework.
+
+Prompt Strategy: Prioritized a "Cloud-First" aesthetic using a specific palette: Black, Purple, White, and Natural Earthy accents.
+
+Sprint 2: Aesthetic & Interactive Layering
+
+Goal: Increase engagement and professional "sleekness."
+
+Prompt Strategy: Implemented Glassmorphism panels and a dynamic Mouse Spotlight effect to create a high-fidelity dashboard feel.
+
+Sprint 3: Architectural Scaling (3-Page SPA)
+
+Goal: Ensure 15+ years of experience and educational tracks were fully documented.
+
+Prompt Strategy: Directed the refactor from a 2-page to a 3-page SPA architecture (Home, Experience, Education) to prevent data truncation.
+
+Sprint 4: Technical Visualization (AWS Flip-Cards)
+
+Goal: Showcase deep-dive AWS knowledge.
+
+Prompt Strategy: Transformed static lists into 3D Interactive Flip-Cards. Directed the AI to populate the "Back" of cards with specific specs (Route 53 Failover, ACM DNS Validation, CloudFront OAC).
+
+Sprint 5: Precision Data Refinement (End-to-End Accuracy)
+
+Goal: Correct complex project narratives to reflect full technical leadership.
+
+Prompt Strategy: * Chemonics: Directed the AI to highlight the End-to-End nature of the CLM upgrade, emphasizing my dual role as Technical Lead and Project Manager responsible for UI testing, documentation, and global training.
+
+Johns Hopkins: Clarified the distinction between the Physical Lab Modernization (Hardware, Layout, and Custom Storage) and the separate cloud-based virtual lab project for 28k users.
+
+Outcome: Accurate representation of full-lifecycle technical projects.
+
+Sprint 6: Debugging & UI Finalization
+
+Goal: Resolve script errors and finalize persistent global navigation.
+
+Prompt Strategy: Fixed a classList TypeError using null-check logic. Integrated persistent navigation tools, social links (LinkedIn/GitHub), and a direct link to the Live Project in the header.
+
+🛠️ Tech Stack
+
+Frontend: HTML5, Tailwind CSS, JavaScript (ES6+).
+
+Interactions: CSS 3D Transforms, Intersection Observer API, Custom Mouse Tracking.
+
+Cloud (Architecture Host): AWS (Route 53, ACM, S3, CloudFront, API Gateway, Lambda).
+
+© 2026 Tanisha Smith | LinkedIn | GitHub

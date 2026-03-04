@@ -3,233 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanisha Smith | Cloud Engineer</title>
+    <title>Tanisha Smith | Cloud Architect & Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-
         :root {
-            --purple-main: #6b21a8;
-            --purple-light: #a855f7;
-            --accent-tan: #c2915a;
+            --purple-main: #8b5cf6;
+            --purple-accent: #7c3aed;
+            --natural: #d97706;
             --bg-dark: #020617;
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Interactive Spotlight */
+        #spotlight {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+            transition: background 0.2s ease;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Navigation Styling */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 92, 246, 0.15);
+            color: white;
+        }
+
+        .nav-link.active {
+            color: var(--purple-main);
+            background: rgba(139, 92, 246, 0.1);
+            font-weight: 700;
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, var(--purple-light) 100%);
+            background: linear-gradient(to right, #a78bfa, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .nav-link.active {
-            color: var(--purple-light);
-            position: relative;
-        }
-        
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
+        /* Flip Card Logic */
+        .flip-card {
+            background-color: transparent;
             width: 100%;
-            height: 2px;
-            background: var(--purple-light);
-            border-radius: 2px;
+            height: 180px;
+            perspective: 1000px;
+            cursor: pointer;
         }
 
-        .code-font { font-family: 'Fira Code', monospace; }
-
-        .profile-img-container {
-            border: 4px solid var(--accent-tan);
-            box-shadow: 0 0 30px rgba(194, 145, 90, 0.2);
-            background-color: rgba(107, 33, 168, 0.1); /* Deep purple background behind the photo */
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
         }
 
-        .tech-tag {
-            background: rgba(107, 33, 168, 0.15);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            transition: all 0.2s ease;
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1.5rem;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+            padding: 20px;
+            text-align: left;
+        }
+
+        /* Timeline styling */
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--purple-main), transparent);
+        }
+
+        .timeline-card {
+            transition: transform 0.3s ease, border 0.3s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateX(10px);
+            border-color: var(--purple-main);
+        }
+
+        /* Bullet Point Fixes */
+        .experience-list {
+            list-style-type: disc !important;
+            padding-left: 1.5rem !important;
+            display: block !important;
+            margin-top: 1rem;
         }
         
-        .tech-tag:hover {
-            border-color: var(--purple-light);
-            background: rgba(107, 33, 168, 0.3);
+        .experience-list li {
+            margin-bottom: 0.75rem !important;
+            color: #94a3b8 !important;
+            display: list-item !important;
+            font-size: 0.875rem !important;
+            line-height: 1.5;
         }
 
-        /* Java-style scrollbar for the "Code" aesthetic */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .experience-list li::marker {
+            color: var(--purple-main);
+        }
+
+        /* Nav Social Buttons */
+        .social-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: #94a3b8;
+        }
+
+        .social-btn:hover {
+            background: var(--purple-main);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .live-project-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #a78bfa;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .live-project-pill:hover {
+            background: var(--purple-main);
+            color: white;
+        }
+
+        .step-dot {
+            width: 24px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .step-dot.active {
+            background: var(--purple-main);
+            width: 48px;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="selection:bg-purple-500/30">
 
-    <!-- Navigation -->
-    <nav class="sticky top-0 z-50 glass-card border-b border-white/5 px-6 py-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center shadow-lg shadow-purple-900/20">
-                    <i class="fas fa-cloud text-white text-lg"></i>
+    <div id="spotlight"></div>
+
+    <!-- Persistent Navigation Header -->
+    <header class="fixed top-0 w-full z-50 glass-panel border-b border-white/5 py-4">
+        <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-between items-center gap-4">
+            <!-- Brand -->
+            <div onclick="navTo('home')" class="cursor-pointer group flex items-center">
+                <div class="bg-purple-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold mr-3 transition-transform group-hover:rotate-6 shadow-lg shadow-purple-500/20">TS</div>
+                <div class="flex flex-col">
+                    <h1 class="font-extrabold text-xl tracking-tighter uppercase leading-none">
+                        Tanisha<span class="text-purple-500">Smith</span>
+                    </h1>
+                    <p class="text-[8px] uppercase tracking-[0.3em] text-gray-500 font-bold mt-1">tanishasmith.cloud</p>
                 </div>
-                <span class="font-bold text-xl tracking-tight hidden sm:inline-block">tanishasmith<span class="text-purple-500">.cloud</span></span>
             </div>
             
-            <div class="flex items-center space-x-8">
-                <div class="flex space-x-6 font-medium text-sm text-slate-400">
-                    <button onclick="switchTab('profile')" id="nav-profile" class="nav-link active transition-colors hover:text-white">Profile</button>
-                    <button onclick="switchTab('experience')" id="nav-experience" class="nav-link transition-colors hover:text-white">Experience</button>
-                </div>
-                <a href="mailto:tansmith173@gmail.com" class="hidden md:block bg-purple-600 hover:bg-purple-700 px-5 py-2 rounded-full text-xs font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-purple-600/20">
-                    HIRE ME
+            <!-- Internal Navigation -->
+            <nav class="flex items-center space-x-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+                <button onclick="navTo('home')" id="nav-home" class="nav-link active uppercase tracking-widest font-bold">Home</button>
+                <button onclick="navTo('experience')" id="nav-experience" class="nav-link uppercase tracking-widest font-bold">Experience</button>
+                <button onclick="navTo('education')" id="nav-education" class="nav-link uppercase tracking-widest font-bold">Education</button>
+            </nav>
+
+            <!-- Corrected Live Project and Social Links -->
+            <div class="flex items-center space-x-3">
+                <a href="https://www.smithanddaughters.org/" target="_blank" class="live-project-pill">
+                    <i class="fas fa-external-link-alt text-[10px]"></i> Live Project
+                </a>
+                <div class="h-6 w-[1px] bg-white/10"></div>
+                <a href="https://www.linkedin.com/in/tanishasmith410/" target="_blank" class="social-btn" title="LinkedIn">
+                    <i class="fab fa-linkedin-in text-sm"></i>
+                </a>
+                <a href="https://github.com" target="_blank" class="social-btn" title="GitHub">
+                    <i class="fab fa-github text-sm"></i>
                 </a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="flex-grow container mx-auto max-w-6xl px-6 py-12">
+    <main class="max-w-7xl mx-auto px-6 pt-36 pb-24">
         
-        <!-- PAGE 1: PROFILE & SKILLS -->
-        <section id="profile" class="tab-content active">
-            <div class="grid md:grid-cols-12 gap-12 items-center mb-24">
-                <div class="md:col-span-7 space-y-8">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-widest">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="page active">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8 order-2 lg:order-1">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-bold uppercase tracking-widest">
+                        <span class="relative flex h-2 w-2 mr-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                         </span>
-                        <span>AWS re/Start Practitioner</span>
+                        System Online | AWS Cloud Practitioner Portfolio
                     </div>
-                    <h1 class="text-5xl md:text-7xl font-bold leading-[1.1]">
-                        Engineering <span class="gradient-text">Cloud</span> Solutions.
-                    </h1>
-                    <p class="text-slate-400 text-lg max-w-xl leading-relaxed">
-                        Junior Cloud Engineer with 15+ years of IT operations experience. Currently mastering AWS core services to bridge legacy systems with modern DevOps practices.
+                    <h2 class="text-6xl md:text-8xl font-extrabold leading-[0.9] tracking-tighter">
+                        Architecting <br> <span class="gradient-text">the Cloud.</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg md:text-xl leading-relaxed max-w-xl">
+                        A Junior Cloud Engineer with a <span class="text-white font-semibold">15-year IT production legacy</span>. Currently transforming legacy projects into enterprise-grade AWS serverless environments.
                     </p>
-                    <div class="flex items-center space-x-6 pt-2">
-                        <a href="https://www.linkedin.com/in/tanishasmith410/" target="_blank" class="text-slate-500 hover:text-purple-400 transition-all transform hover:-translate-y-1"><i class="fab fa-linkedin text-2xl"></i></a>
-                        <a href="https://github.com/TanishaSmith" target="_blank" class="text-slate-500 hover:text-purple-400 transition-all transform hover:-translate-y-1"><i class="fab fa-github text-2xl"></i></a>
-                        <a href="mailto:tansmith173@gmail.com" class="text-slate-500 hover:text-purple-400 transition-all transform hover:-translate-y-1"><i class="fas fa-envelope text-2xl"></i></a>
+                    
+                    <div class="flex flex-wrap gap-5 pt-4">
+                        <button onclick="navTo('experience')" class="btn-hover-glow bg-purple-600 text-white px-10 py-5 rounded-2xl font-bold transition-all flex items-center shadow-xl shadow-purple-900/20 hover:scale-105 active:scale-95">
+                            Explore Career Timeline <i class="fas fa-arrow-right ml-3"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="md:col-span-5 flex justify-center lg:justify-end">
-                    <div class="relative group">
-                        <!-- Enhanced Decorative Glow Ring -->
-                        <div class="absolute -inset-6 bg-gradient-to-tr from-purple-600/30 via-purple-500/5 to-amber-500/30 rounded-full blur-3xl opacity-60 group-hover:opacity-80 transition-opacity duration-700"></div>
-                        
-                        <div id="image-wrapper" class="relative profile-img-container w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-full">
-                            <img src="TanishaPic.jpg" 
-                                 alt="Tanisha Smith" 
-                                 class="w-full h-full object-cover"
-                                 onerror="handleImageError(this)">
-                        </div>
+                <div class="order-1 lg:order-2 flex justify-center lg:justify-end relative">
+                    <div class="absolute inset-0 bg-purple-600/30 blur-[140px] rounded-full"></div>
+                    <div class="relative float-anim">
+                        <div class="absolute -inset-6 border-2 border-dashed border-purple-500/20 rounded-[3rem] animate-[spin_30s_linear_infinite]"></div>
+                        <img src="TanishaPic.jpg" alt="Tanisha Smith" class="rounded-[2rem] w-80 h-80 md:w-[450px] md:h-[450px] object-cover shadow-2xl border-4 border-white/10 transition-all duration-700" onerror="this.src='https://via.placeholder.com/500x500?text=Tanisha+Smith'">
                     </div>
                 </div>
             </div>
 
-            <!-- Technical Skills Grid -->
-            <div class="mb-24">
-                <div class="flex items-center space-x-4 mb-10">
-                    <h2 class="text-2xl font-bold">Technical Stack</h2>
-                    <div class="flex-grow h-[1px] bg-white/10"></div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass-card p-8 rounded-3xl group hover:border-purple-500/40 transition-all">
-                        <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
-                            <i class="fas fa-cloud text-xl"></i>
-                        </div>
-                        <h3 class="font-bold text-lg mb-4">Cloud & Infrastructure</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">AWS (EC2, S3, VPC)</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Kubernetes</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Docker</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">IAM Policies</span>
-                        </div>
+            <!-- PROJECT EVOLUTION SECTION -->
+            <div class="mt-48 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="w-12 h-1 bg-purple-600 rounded-full"></span>
+                        <h3 class="text-3xl font-extrabold">Project <span class="text-purple-500">Evolution</span></h3>
                     </div>
-                    <div class="glass-card p-8 rounded-3xl group hover:border-purple-500/40 transition-all">
-                        <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
-                            <i class="fas fa-terminal text-xl"></i>
-                        </div>
-                        <h3 class="font-bold text-lg mb-4">DevOps & Linux</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Linux CLI</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Bash Scripting</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Git/GitHub</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">YAML Config</span>
-                        </div>
-                    </div>
-                    <div class="glass-card p-8 rounded-3xl group hover:border-purple-500/40 transition-all">
-                        <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
-                            <i class="fas fa-tools text-xl"></i>
-                        </div>
-                        <h3 class="font-bold text-lg mb-4">IT Operations</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">ServiceNow</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Office 365 Admin</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">D365 CRM</span>
-                            <span class="tech-tag px-3 py-1 rounded-lg text-xs font-medium">Icertis CLM</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Featured Project -->
-            <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-amber-500 rounded-[2rem] blur opacity-20 group-hover:opacity-30 transition"></div>
-                <div class="relative glass-card p-8 md:p-12 rounded-[2rem] overflow-hidden">
-                    <div class="md:flex items-center gap-12">
-                        <div class="md:w-1/2 space-y-6">
-                            <div class="inline-block text-purple-400 font-bold text-xs uppercase tracking-tighter">Featured Case Study</div>
-                            <h3 class="text-3xl font-bold">Cloud Migration: Netlify to AWS</h3>
-                            <p class="text-slate-400 leading-relaxed">
-                                Successfully migrated a legacy static web application to a serverless AWS architecture. I refactored the backend using **API Gateway**, **Lambda**, and **DynamoDB**, resulting in hosting costs drop to under $1/month.
+                    <div class="glass-panel p-8 rounded-3xl border-l-4 border-purple-600">
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            This project began in <span class="text-white font-semibold">2021</span> as a core HTML/CSS website for a class at <span class="text-purple-400 font-bold">Towson University</span>. It was my foundational exploration into web architecture.
+                        </p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                            In <span class="text-white font-semibold">2025</span>, I revisited this codebase to transform it into a live testing ground for <span class="text-white underline decoration-purple-500 decoration-2">AWS Cloud Services</span>. I have successfully refactored the logic into a functional serverless backend.
+                        </p>
+                        <div class="bg-purple-500/10 p-5 rounded-2xl mb-6">
+                            <p class="text-white text-xs font-bold uppercase flex items-center mb-2">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i> Operational Status
                             </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-white/5 border border-white/10 px-3 py-1 rounded text-[10px] code-font">Python</span>
-                                <span class="bg-white/5 border border-white/10 px-3 py-1 rounded text-[10px] code-font">API Gateway</span>
-                                <span class="bg-white/5 border border-white/10 px-3 py-1 rounded text-[10px] code-font">AWS CodePipeline</span>
-                            </div>
-                            <div class="flex space-x-4 pt-4">
-                                <a href="#" class="bg-white text-slate-900 px-6 py-2 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">View Project</a>
+                            <p class="text-gray-400 text-xs">The <span class="text-purple-300 font-bold">Contact Form is fully functional</span>, integrated with API Gateway and Lambda to process user submissions in real-time. Data persistence and advanced analytics are currently in the implementation phase.</p>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            This live version is the precursor to a <span class="text-amber-500 font-bold">full UI/UX redesign</span> scheduled for 2026, aimed at deeper service integration and automated scaling metrics.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- INFRASTRUCTURE VISUALIZER -->
+                <div class="lg:col-span-7">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-6 text-center">Interactive Infrastructure Details (Flip for Tech Specs)</p>
+                    <div class="grid grid-cols-2 gap-4 relative">
+                        <!-- Card 1 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-white/10">
+                                    <i class="fas fa-network-wired text-purple-400 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">Route 53</p>
+                                </div>
+                                <div class="flip-card-back bg-purple-600/20 border border-purple-500/50">
+                                    <p class="text-[10px] font-bold text-white mb-2 uppercase tracking-tighter text-left">DNS Routing</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Configured Alias records for CloudFront distribution. Managed failover routing policies to ensure high availability for the domain.</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="hidden md:block md:w-1/2">
-                            <div class="bg-slate-950 rounded-2xl p-6 border border-white/10 shadow-2xl">
-                                <div class="flex space-x-2 mb-4">
-                                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
-                                    <div class="w-3 h-3 rounded-full bg-amber-500/50"></div>
-                                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                        <!-- Card 2 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-white/10">
+                                    <i class="fas fa-shield-alt text-amber-500 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">ACM (SSL)</p>
                                 </div>
-                                <div class="space-y-2 text-[10px] code-font text-purple-300">
-                                    <p><span class="text-slate-500">1</span> <span class="text-amber-400">import</span> boto3</p>
-                                    <p><span class="text-slate-500">2</span> </p>
-                                    <p><span class="text-slate-500">3</span> <span class="text-blue-400">def</span> <span class="text-green-400">lambda_handler</span>(event, context):</p>
-                                    <p><span class="text-slate-500">4</span> &nbsp;&nbsp;&nbsp;&nbsp;dynamodb = boto3.resource(<span class="text-amber-200">'dynamodb'</span>)</p>
-                                    <p><span class="text-slate-500">5</span> &nbsp;&nbsp;&nbsp;&nbsp;table = dynamodb.Table(<span class="text-amber-200">'CloudResumeStats'</span>)</p>
-                                    <p><span class="text-slate-500">6</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-500"># AWS Migration Logic</span></p>
+                                <div class="flip-card-back bg-amber-600/20 border border-amber-500/50">
+                                    <p class="text-[9px] font-bold text-white mb-2 uppercase tracking-tighter text-left">Security Layer</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Provisioned SSL/TLS certificates via AWS Certificate Manager. Implemented DNS validation for automated renewal and HTTPS security.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-white/10">
+                                    <i class="fas fa-bolt text-purple-400 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">CloudFront</p>
+                                </div>
+                                <div class="flip-card-back bg-purple-600/20 border border-purple-500/50">
+                                    <p class="text-[9px] font-bold text-white mb-2 uppercase tracking-tighter text-left">CDN & Edge</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Deployed as a CDN to cache content globally. Configured custom cache behaviors and Origin Access Control (OAC) for S3 security.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-white/10">
+                                    <i class="fas fa-archive text-purple-400 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">S3 Hosting</p>
+                                </div>
+                                <div class="flip-card-back bg-purple-600/20 border border-purple-500/50">
+                                    <p class="text-[9px] font-bold text-white mb-2 uppercase tracking-tighter text-left">Static Storage</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Optimized bucket for static hosting. Disabled public access and utilized OAC to restrict traffic exclusively to CloudFront origins.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-white/10">
+                                    <i class="fas fa-door-open text-purple-400 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">API Gateway</p>
+                                </div>
+                                <div class="flip-card-back bg-purple-600/20 border border-purple-500/50">
+                                    <p class="text-[9px] font-bold text-white mb-2 uppercase tracking-tighter text-left">REST API Entry</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Built RESTful endpoints with Lambda Proxy Integration. Managed CORS policies and request validation for the contact form.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front glass-panel border-purple-500/30">
+                                    <i class="fab fa-python text-amber-500 text-2xl mb-2"></i>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">Lambda</p>
+                                </div>
+                                <div class="flip-card-back bg-amber-600/20 border border-amber-500/50">
+                                    <p class="text-[9px] font-bold text-white mb-2 uppercase tracking-tighter text-left">Serverless Logic</p>
+                                    <p class="text-[9px] text-gray-300 text-left leading-relaxed">Developed event-driven Python functions to process form data. Implemented logging via CloudWatch for troubleshooting and audits.</p>
                                 </div>
                             </div>
                         </div>
@@ -239,177 +419,281 @@
         </section>
 
         <!-- PAGE 2: EXPERIENCE -->
-        <section id="experience" class="tab-content">
-            <div class="flex items-center justify-between mb-12">
-                <h2 class="text-3xl font-bold flex items-center">
-                    <i class="fas fa-history text-purple-500 mr-4"></i>
-                    Career History
-                </h2>
-                <div class="text-xs font-mono text-slate-500 bg-white/5 px-3 py-1 rounded-full border border-white/10">
-                    RESUME_V2.PDF
+        <section id="page-experience" class="page">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-16">
+                    <h2 class="text-5xl font-extrabold mb-4">Professional <span class="text-purple-500">Milestones</span></h2>
+                    <p class="text-gray-400 text-lg italic">15+ years of delivering technical excellence and operational integrity.</p>
+                </div>
+
+                <div class="relative space-y-16">
+                    <div class="timeline-line"></div>
+
+                    <!-- Role 1: Chemonics Admin -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-purple-600 border-4 border-bg-dark z-10 flex items-center justify-center shadow-lg shadow-purple-500/50">
+                            <i class="fas fa-database text-xs text-white"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">CLM Database Administrator</h3>
+                                <span class="bg-purple-900/40 text-purple-300 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Oct 2022 – Apr 2025</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">Chemonics International | Remote</p>
+                            <div class="bg-purple-500/10 p-5 rounded-2xl border border-purple-500/20 mb-6">
+                                <p class="text-purple-400 text-xs font-bold uppercase mb-2">End-to-End Technical Leadership</p>
+                                <p class="text-sm text-gray-300">Managed a <strong>major CLM system upgrade from start to finish</strong>. Combined Project Management with heavy <strong>Technical execution</strong>, including rigorous UI testing, backend validation, technical documentation, and process optimization to ensure a seamless transition for the global enterprise.</p>
+                            </div>
+                            <ul class="experience-list">
+                                <li><strong>Full Lifecycle Management:</strong> Spearheaded initial requirement gathering, managed technical build phases, conducted comprehensive testing, and led post-release customer training.</li>
+                                <li>Collaborated with stakeholders to automate system rules and establish workflow requirements, improving process efficiency.</li>
+                                <li>Managed international vendor relationships and license management, saving the organization $150,000 through strategic contract negotiations.</li>
+                                <li>Developed and delivered customized training programs and documentation to facilitate user onboarding and system adoption.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Role 2: Chemonics Associate -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-purple-600 border-4 border-bg-dark z-10 flex items-center justify-center">
+                            <i class="fas fa-link text-xs text-white"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">CLM Systems Associate</h3>
+                                <span class="bg-purple-900/40 text-purple-300 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Apr 2022 – Oct 2022</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">Chemonics International | Remote</p>
+                            <ul class="experience-list">
+                                <li>Analyzed and resolved complex integration issues with D365 and CRM systems, collaborating directly with the Global Technology Infrastructure division.</li>
+                                <li>Served as the primary technical point of contact for the CLM system, achieving a 75% increase in customer satisfaction through targeted training.</li>
+                                <li>Promoted to CLM Database Administrator within four months of onboarding.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Role 3: Johns Hopkins -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-amber-600 border-4 border-bg-dark z-10 flex items-center justify-center shadow-lg shadow-amber-500/50">
+                            <i class="fas fa-university text-xs text-white"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">Sr. Technical Support Analyst & Lab Manager</h3>
+                                <span class="bg-amber-900/40 text-amber-300 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Dec 2017 – Apr 2022</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">Johns Hopkins University | Dual Role</p>
+                            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                                <div class="bg-purple-500/10 p-5 rounded-2xl border border-purple-500/20">
+                                    <p class="text-purple-400 text-xs font-bold uppercase mb-2">Project: Physical Lab Modernization</p>
+                                    <p class="text-[11px] text-gray-300 leading-relaxed">Modernized physical campus computer labs by <strong>updating hardware with new computers</strong>, redesigning the functional layout, installing new carpeting, and integrating custom-built storage solutions.</p>
+                                </div>
+                                <div class="bg-purple-500/10 p-5 rounded-2xl border border-purple-500/20">
+                                    <p class="text-purple-400 text-xs font-bold uppercase mb-2">Project: 28k User Virtual Lab</p>
+                                    <p class="text-[11px] text-gray-300 leading-relaxed">Collaborated with software engineers as the primary technical point of contact on a <strong>cloud-based virtual lab deployment serving 28,000 customers</strong>, successfully reducing downtime by 50%.</p>
+                                </div>
+                            </div>
+                            <ul class="experience-list">
+                                <li>Supervised 20 lab assistants over 4 years, providing training on operations, security patching, and inventory management for labs serving 5,000 students.</li>
+                                <li>Orchestrated remote work migration for 1,000+ staff during the COVID-19 pandemic, configuring VPNs, workstations, and software under tight deadlines.</li>
+                                <li>Managed daily operations, hardware procurement, and lifecycle management for campus computer labs.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Role 4: HCC -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-amber-600 border-4 border-bg-dark z-10 flex items-center justify-center">
+                            <i class="fas fa-tools text-xs text-white"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">Computer Technician</h3>
+                                <span class="bg-amber-900/40 text-amber-300 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Oct 2015 – Dec 2017</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">Harford Community College</p>
+                            <ul class="experience-list">
+                                <li>Provided Tier-2 technical support to 6,000 campus users, performing root-cause analysis on hardware and software issues.</li>
+                                <li>Monitored and deployed software to 600+ devices campus-wide using KACE Systems Management Appliance.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Role 5: UB -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-gray-600 border-4 border-bg-dark z-10 flex items-center justify-center">
+                            <i class="fas fa-headset text-xs text-white"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">Help Desk Analyst</h3>
+                                <span class="bg-gray-800 text-gray-400 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Mar 2010 – Aug 2013</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">University of Baltimore</p>
+                            <ul class="experience-list">
+                                <li>Resolved 50+ Tier-1 technical support requests weekly while maintaining the fastest resolution rate on the team.</li>
+                                <li>Created support documentation enabling user self-service, reducing IT support involvement by 20%.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Role 6: Air Force -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-white border-4 border-bg-dark z-10 flex items-center justify-center">
+                            <i class="fas fa-plane text-xs text-black"></i>
+                        </div>
+                        <div class="glass-panel p-8 rounded-3xl timeline-card border-l-4 border-white">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                                <h3 class="text-xl font-bold text-white">Aviation Resource Manager</h3>
+                                <span class="bg-white/10 text-white px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Jun 2002 – Sep 2005</span>
+                            </div>
+                            <p class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">United States Air Force</p>
+                            <ul class="experience-list">
+                                <li>Liaised with developers to test and debug updates for the Aviation Resource Management System (ARMS), ensuring data integrity.</li>
+                                <li>Controlled security access to critical aviation databases and monitored flight requirements to ensure mission readiness.</li>
+                                <li>Planned and directed aircrew resource activities, ensuring coordination between aircraft and crew for daily operations.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 flex justify-center">
+                    <button onclick="navTo('education')" class="text-sm font-bold bg-purple-600 px-8 py-4 rounded-full hover:bg-purple-700 transition-all flex items-center group shadow-lg shadow-purple-500/20">
+                        Next: Education & Training <i class="fas fa-graduation-cap ml-3 group-hover:scale-110 transition-transform"></i>
+                    </button>
                 </div>
             </div>
+        </section>
 
-            <div class="grid lg:grid-cols-12 gap-12">
-                <div class="lg:col-span-8 space-y-8">
-                    <!-- Chemonics -->
-                    <div class="glass-card p-8 rounded-3xl border-l-4 border-purple-600">
-                        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
-                            <div>
-                                <h3 class="text-xl font-bold">CLM Database Administrator</h3>
-                                <p class="text-purple-400 font-medium">Chemonics International</p>
-                            </div>
-                            <span class="text-slate-500 text-xs font-mono mt-2 md:mt-0 px-3 py-1 bg-white/5 rounded-lg italic">2022 — 2025</span>
+        <!-- PAGE 3: EDUCATION -->
+        <section id="page-education" class="page">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-16">
+                    <h2 class="text-5xl font-extrabold mb-4">Academic <span class="text-purple-500">Foundation</span></h2>
+                    <p class="text-gray-400 text-lg">My history of academic achievement and specialized cloud engineering training.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-8">
+                        <h3 class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-500 mb-6">Degree History</h3>
+                        
+                        <div class="glass-panel p-8 rounded-[2rem] border-l-4 border-purple-500">
+                            <p class="text-[10px] font-bold text-purple-400 mb-2 uppercase tracking-widest">Expected 2027</p>
+                            <h4 class="text-xl font-bold mb-1">Bachelor of Science</h4>
+                            <p class="text-amber-500 font-bold text-sm mb-3">Applied Information Technology</p>
+                            <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Towson University</p>
                         </div>
-                        <ul class="space-y-4 text-slate-400 text-sm">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-purple-500 mt-1 mr-3 text-xs"></i>
-                                <span>Saved the organization <span class="text-white font-semibold">$150,000</span> through strategic vendor contract negotiations.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-purple-500 mt-1 mr-3 text-xs"></i>
-                                <span>Collaborated with stakeholders to automate system rules, driving significant workflow efficiency.</span>
-                            </li>
-                        </ul>
+
+                        <div class="glass-panel p-8 rounded-[2rem] border-l-4 border-gray-600">
+                            <p class="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest">Completed</p>
+                            <h4 class="text-xl font-bold mb-1">Associate of Arts</h4>
+                            <p class="text-amber-500 font-bold text-sm mb-3">IT Concentration</p>
+                            <p class="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Harford Community College</p>
+                        </div>
                     </div>
 
-                    <!-- Johns Hopkins -->
-                    <div class="glass-card p-8 rounded-3xl border-l-4 border-slate-700">
-                        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
-                            <div>
-                                <h3 class="text-xl font-bold">Senior Technical Support Analyst</h3>
-                                <p class="text-purple-400 font-medium">Johns Hopkins University</p>
+                    <div class="space-y-8">
+                        <h3 class="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-500 mb-6">Certifications & Training</h3>
+                        
+                        <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-purple-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-xl font-bold">AWS re/Start</h4>
+                                <span class="bg-purple-900/50 text-purple-300 text-[9px] px-2 py-1 rounded font-bold uppercase tracking-widest">Active</span>
                             </div>
-                            <span class="text-slate-500 text-xs font-mono mt-2 md:mt-0 px-3 py-1 bg-white/5 rounded-lg italic">2017 — 2022</span>
-                        </div>
-                        <div class="bg-purple-500/10 border border-purple-500/20 p-4 rounded-2xl mb-6">
-                            <p class="text-xs text-purple-200">
-                                <i class="fas fa-star mr-2 text-amber-400"></i>
-                                <b>Cloud Impact:</b> Led a virtual lab deployment for 28,000 customers, cutting resource downtime by 50%.
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                                Selected for an intensive 15-week cloud infrastructure program through <span class="text-white font-semibold">Per Scholas</span>. Mastering AWS Core Services.
                             </p>
+                            <p class="text-[9px] text-purple-400 font-bold uppercase tracking-widest">Graduating Mar 2026</p>
                         </div>
-                        <ul class="space-y-4 text-slate-400 text-sm">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-slate-600 mt-1 mr-3 text-xs"></i>
-                                <span>Orchestrated remote work migration for 1,000+ staff during pandemic lockdowns.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-slate-600 mt-1 mr-3 text-xs"></i>
-                                <span>Supervised 20 lab assistants, overseeing security patching and inventory for campus labs.</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- USAF -->
-                    <div class="glass-card p-8 rounded-3xl border-l-4 border-slate-700">
-                        <div class="flex flex-col md:flex-row justify-between items-start mb-6">
-                            <div>
-                                <h3 class="text-xl font-bold text-slate-300 italic">Aviation Resource Manager</h3>
-                                <p class="text-purple-400 font-medium">United States Air Force</p>
+
+                        <div class="glass-panel p-8 rounded-[2rem] border-t-4 border-amber-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-xl font-bold">CompTIA Security+</h4>
+                                <span class="bg-amber-900/50 text-amber-300 text-[9px] px-2 py-1 rounded font-bold uppercase tracking-widest">Target</span>
                             </div>
-                            <span class="text-slate-500 text-xs font-mono mt-2 md:mt-0 px-3 py-1 bg-white/5 rounded-lg italic">2002 — 2005</span>
+                            <p class="text-gray-400 text-sm">Validating core cybersecurity skills required for enterprise and defense-grade environments.</p>
+                            <p class="text-[9px] text-amber-500 font-bold uppercase tracking-widest">Projected May 2026</p>
                         </div>
-                        <p class="text-sm text-slate-400 italic">Ensured data integrity for critical aviation databases and managed security access to mission-critical systems.</p>
                     </div>
                 </div>
 
-                <!-- Sidebar Education/Certs -->
-                <div class="lg:col-span-4 space-y-8">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Education</h4>
-                        <div class="space-y-4">
-                            <div class="p-5 bg-white/5 rounded-2xl border border-white/5">
-                                <p class="text-purple-400 font-bold text-xs mb-1">2027 (Expected)</p>
-                                <h5 class="font-bold text-sm">B.S. Applied IT</h5>
-                                <p class="text-xs text-slate-500">Towson University</p>
-                            </div>
-                            <div class="p-5 bg-purple-900/10 rounded-2xl border border-purple-500/20">
-                                <p class="text-amber-400 font-bold text-xs mb-1">IN PROGRESS</p>
-                                <h5 class="font-bold text-sm">AWS re/Start</h5>
-                                <p class="text-xs text-slate-400">Per Scholas</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Certifications</h4>
-                        <div class="space-y-3">
-                            <div class="flex items-center p-4 glass-card rounded-2xl">
-                                <div class="w-10 h-10 bg-purple-600/20 rounded-xl flex items-center justify-center text-purple-400 mr-4">
-                                    <i class="fas fa-shield-alt text-sm"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <h5 class="font-bold text-[11px]">CompTIA Security+</h5>
-                                    <div class="w-full bg-slate-800 h-1 mt-2 rounded-full overflow-hidden">
-                                        <div class="bg-purple-500 h-full w-[85%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center p-4 glass-card rounded-2xl">
-                                <div class="w-10 h-10 bg-purple-600/20 rounded-xl flex items-center justify-center text-purple-400 mr-4">
-                                    <i class="fab fa-aws text-sm"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <h5 class="font-bold text-[11px]">AWS Cloud Practitioner</h5>
-                                    <div class="w-full bg-slate-800 h-1 mt-2 rounded-full overflow-hidden">
-                                        <div class="bg-purple-500 h-full w-[95%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="mt-20 glass-panel p-10 rounded-[3rem] text-center max-w-2xl mx-auto border-purple-500/20 shadow-2xl shadow-purple-900/10">
+                    <h3 class="text-2xl font-bold mb-4">Hire a Cloud Professional</h3>
+                    <p class="text-gray-400 mb-8 font-medium">Ready to bring my 15 years of technical support and systems administration to your cloud architecture team.</p>
+                    <a href="mailto:tansmith173@gmail.com" class="btn-hover-glow bg-purple-600 text-white px-12 py-5 rounded-2xl font-bold transition-all inline-flex items-center hover:scale-105 shadow-xl shadow-purple-500/30">
+                        Send an Email <i class="fas fa-paper-plane ml-3"></i>
+                    </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="glass-card border-t border-white/5 py-12 px-6 mt-20">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-10">
-                <div class="flex items-center space-x-3 mb-6 md:mb-0">
-                    <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-cloud text-white text-xs"></i>
-                    </div>
-                    <span class="font-bold text-lg">tanishasmith.cloud</span>
-                </div>
-                <div class="flex space-x-8 text-sm text-slate-400">
-                    <a href="#" class="hover:text-purple-400 transition-colors">Projects</a>
-                    <a href="#" class="hover:text-purple-400 transition-colors">Resume</a>
-                    <a href="#" class="hover:text-purple-400 transition-colors">Contact</a>
-                </div>
+    <footer class="glass-panel border-t border-white/5 py-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] tracking-widest uppercase font-bold">
+            <div class="text-center md:text-left mb-6 md:mb-0">
+                <p class="text-white mb-1">Tanisha Smith</p>
+                <p>Junior Cloud Engineer Portfolio</p>
             </div>
-            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-500 uppercase tracking-widest font-mono">
-                <p>&copy; 2025 Tanisha Smith. All Rights Reserved.</p>
-                <p class="mt-4 md:mt-0">Designed & Deployed via AWS Infrastructure</p>
+            <div class="flex space-x-8 mb-6 md:mb-0">
+                <button onclick="navTo('home')" class="hover:text-purple-400 transition-colors">Home</button>
+                <button onclick="navTo('experience')" class="hover:text-purple-400 transition-colors">Experience</button>
+                <button onclick="navTo('education')" class="hover:text-purple-400 transition-colors">Education</button>
             </div>
+            <p>© 2026 | Baltimore, MD | tanishasmith.cloud</p>
         </div>
     </footer>
 
     <script>
-        function switchTab(tabName) {
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+        document.addEventListener('mousemove', e => {
+            const spotlight = document.getElementById('spotlight');
+            if (spotlight) {
+                spotlight.style.setProperty('--x', `${e.clientX}px`);
+                spotlight.style.setProperty('--y', `${e.clientY}px`);
+            }
+        });
 
+        function navTo(pageId) {
+            const pages = document.querySelectorAll('.page');
             const navLinks = document.querySelectorAll('.nav-link');
+            const dots = document.querySelectorAll('.step-dot');
+            
+            pages.forEach(page => page.classList.remove('active'));
             navLinks.forEach(link => link.classList.remove('active'));
-            document.getElementById('nav-' + tabName).classList.add('active');
+            if (dots) dots.forEach(dot => dot.classList.remove('active'));
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const labels = {
+                'home': 'Introduction',
+                'experience': 'Professional Experience',
+                'education': 'Education & Certs'
+            };
+
+            setTimeout(() => {
+                const targetPage = document.getElementById('page-' + pageId);
+                if (targetPage) targetPage.classList.add('active');
+                
+                const navLink = document.getElementById('nav-' + pageId);
+                if (navLink) navLink.classList.add('active');
+                
+                const stepDot = document.getElementById('dot-' + pageId);
+                if (stepDot) stepDot.classList.add('active');
+                
+                const label = document.getElementById('page-label');
+                if (label && labels[pageId]) label.innerText = labels[pageId];
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
         }
 
-        function handleImageError(img) {
-            const container = document.getElementById('image-wrapper');
-            // Matching the new theme colors for the error state
-            container.classList.add('bg-gradient-to-br', 'from-slate-900', 'to-purple-900/30', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center', 'p-6');
-            container.innerHTML = `
-                <i class="fas fa-user-circle text-7xl text-purple-500/30 mb-4"></i>
-                <p class="text-[10px] text-slate-300 uppercase tracking-widest font-bold">Image Pending</p>
-                <p class="text-[9px] text-slate-500 mt-2 px-4 leading-relaxed italic">
-                    Place "TanishaPic.jpg" in your desktop folder to see it live!
-                </p>
-            `;
-        }
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-[fadeIn_0.8s_ease-out_forwards]');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-panel').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
